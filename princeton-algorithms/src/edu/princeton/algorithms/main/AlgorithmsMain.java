@@ -1,32 +1,51 @@
 package edu.princeton.algorithms.main;
 
-import edu.princeton.algorithms.unionfind.UnionFind;
-import edu.princeton.algorithms.unionfind.WeightedQuickUnion;
+import edu.princeton.algorithms.model.Person;
+import edu.princeton.algorithms.symboltables.BinarySearchTree;
 
 public class AlgorithmsMain {
 
-	public static void main(String[] args) {
-		System.out.println("0\t1\t2\t3\t4\t5\t6\t7\t8\t9");
-		System.out.println("------------------------------------------------------------------------");
-		UnionFind uf = new WeightedQuickUnion(10);
-		uf.addConnection(3, 4);
-		uf.printOutput();
-		uf.addConnection(4, 9);
-		uf.printOutput();
-		uf.addConnection(8, 0);
-		uf.printOutput();
-		uf.addConnection(2, 3);
-		uf.printOutput();
-		uf.addConnection(5, 6);
-		uf.printOutput();
-		uf.addConnection(5, 9);
-		uf.printOutput();
-		uf.addConnection(7, 3);
-		uf.printOutput();
-		uf.addConnection(4, 8);
-		uf.printOutput();
-		uf.addConnection(6, 1);
-		uf.printOutput();
-	}
+    public static void main(String[] args) {
+        BinarySearchTree<String, Person> bst = new BinarySearchTree<String, Person>();
 
+        Person julia = new Person("Julia", "Leonardi", 5);
+        bst.put("julia", julia);
+        Person bia = new Person("Ana", "Bia", 10);
+        bst.put("bia", bia);
+        Person pri = new Person("Priscila", "Oliveira", 29);
+        bst.put("pri", pri);
+        Person virso = new Person("Virso", "Oliveira", 53);
+        bst.put("virso", virso);
+        Person ed = new Person("Ed", "Leonardi", 32);
+        bst.put("ed", ed);
+
+        System.out.println(bst.get("pri"));
+        System.out.println(bst.get("julia"));
+        System.out.println(bst.get("bia"));
+
+        System.out.println("mira floor's : " + bst.floor("mira"));
+
+        System.out.println("Pri's rank:" + bst.rank("pri"));
+        System.out.println("Julia's rank:" + bst.rank("julia"));
+        System.out.println("Bia's rank:" + bst.rank("bia"));
+
+        System.out.println();
+        System.out.println("Max key: " + bst.max());
+
+        System.out.println();
+        System.out.println("Min key: " + bst.min());
+
+        System.out.println("\nDeleting min\n");
+        bst.deleteMin();
+        System.out.println("\nDeleting virso\n");
+        bst.delete("virso");
+        System.out.println("\nDeleting max\n");
+        bst.deleteMax();
+
+        int idx = 1;
+        for (String key : bst.keys()) {
+            System.out.println("key " + idx++ + " " + key);
+        }
+
+    }
 }
