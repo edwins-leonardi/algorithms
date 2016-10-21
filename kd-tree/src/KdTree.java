@@ -1,6 +1,7 @@
 import edu.princeton.cs.algs4.Point2D;
 import edu.princeton.cs.algs4.Queue;
 import edu.princeton.cs.algs4.RectHV;
+import edu.princeton.cs.algs4.StdDraw;
 
 public class KdTree {
 
@@ -26,10 +27,29 @@ public class KdTree {
     }
 
     public void draw() {
-        Queue<Point2D> points = new Queue<Point2D>();
-        inorder(root, points);
-        for (Point2D p : points)
-            p.draw();
+        Queue<Node> nodes = new Queue<Node>();
+        inorder(root, nodes);
+        for (Node n : nodes) {
+            StdDraw.setPenRadius(0.01);
+            StdDraw.setPenColor(StdDraw.BLACK);
+            n.key.draw();
+            if (n.line == VERTICAL) {
+                StdDraw.setPenRadius(0.001);
+                StdDraw.setPenColor(StdDraw.RED);
+
+                RectHV r = new RectHV(n.leftRect.xmax(), n.rightRect.ymin(),
+                        n.rightRect.xmin(), n.rightRect.ymax());
+                r.draw();
+            } else {
+                StdDraw.setPenRadius(0.001);
+                StdDraw.setPenColor(StdDraw.BLUE);
+
+                RectHV r = new RectHV(n.leftRect.xmin(), n.leftRect.ymax(),
+                        n.leftRect.xmax(), n.rightRect.ymin());
+                r.draw();
+
+            }
+        }
     }
 
     public Iterable<Point2D> range(RectHV rect) {
@@ -54,62 +74,104 @@ public class KdTree {
 
         if (pointLeansLeft(n, target)) {
             nearest = findNearest(n.left, nearest, target);
+            if (n.right != null && canBeReached(n.rightRect, target, nearest))
+                nearest = findNearest(n.right, nearest, target);
+        } else {
             nearest = findNearest(n.right, nearest, target);
-
-            /*
-             * if (n.right != null && calculateMinimumDistance(n.right, n,
-             * target) < nearest .distanceTo(target)) nearest =
-             * findNearest(n.right, nearest, target); else if (n.right != null)
-             * { if (calculateMinimumDistance(n.right, n, target) < 0 ||
-             * nearest.distanceTo(target) < 0) { System.out.println("peeeee"); }
-             * }
-             */} else {
-            nearest = findNearest(n.right, nearest, target);
-            nearest = findNearest(n.left, nearest, target);
-            /*
-             * if (n.left != null && calculateMinimumDistance(n.left, n, target)
-             * < nearest .distanceTo(target)) nearest = findNearest(n.left,
-             * nearest, target); else if (n.left != null) { if
-             * (calculateMinimumDistance(n.left, n, target) < 0 ||
-             * nearest.distanceTo(target) < 0) { System.out.println("peeeee"); }
-             * }
-             */}
+            if (n.left != null && canBeReached(n.leftRect, target, nearest))
+                nearest = findNearest(n.left, nearest, target);
+        }
 
         return nearest;
     }
 
-    private Node insert(Node node, Point2D key, Node parent) {
+    private Node insert(Node node, Point2D point, Node parent) {
         if (node == null) {
+            RectHV leftRect = getLeftRect(parent, point);
+            RectHV rightRect = getRightRect(parent, point);
             if (parent == null)
-                return new Node(key, VERTICAL, 1);
+                return new Node(point, VERTICAL, 1, leftRect, rightRect);
             else
-                return new Node(key, !parent.line, 1);
+                return new Node(point, !parent.line, 1, leftRect, rightRect);
         }
-        if (node.key.equals(key))
+        if (node.key.equals(point))
             return node;
-        int cmp = comparePoints(key, node);
-        if (cmp <= 0) {
-            node.left = insert(node.left, key, parent);
+        int cmp = comparePoints(point, node);
+        if (cmp < 0) {
+            node.left = insert(node.left, point, node);
         } else {
-            node.right = insert(node.right, key, parent);
+            node.right = insert(node.right, point, node);
         }
         node.size = 1 + size(node.left) + size(node.right);
         return node;
     }
 
-    private Double calculateMinimumDistance(Node node, Node parent,
-            Point2D target) {
+    /*
+     * private Double calculateMinimumDistance(Node node, Node parent, Point2D
+     * target) {
+     * 
+     * double maxY = (parent == null) ? 1d : Math.max(parent.key.y(),
+     * node.key.y()); double maxX = (parent == null) ? 1d :
+     * Math.max(parent.key.x(), node.key.x()); if (node.line == VERTICAL) return
+     * new Point2D(node.key.x(), Math.min(target.y(), maxY))
+     * .distanceTo(target); else return new Point2D(Math.min(target.x(), maxX),
+     * node.key.y()) .distanceTo(target); }
+     */
+    // private boolean canBeReached(Node node, Node parent, Point2D target,
+    // Point2D nearest) {
+    //
+    // double maxY = (parent == null) ? 1d : Math.max(parent.key.y(),
+    // node.key.y());
+    // double maxX = (parent == null) ? 1d : Math.max(parent.key.x(),
+    // node.key.x());
+    // Point2D other = null;
+    // if (node.line == VERTICAL)
+    // other = new Point2D(node.key.x(), Math.min(target.y(), maxY));
+    // else
+    // other = new Point2D(Math.min(target.x(), maxX), node.key.y());
+    //
+    // return target.distanceSquaredTo(other) <= target
+    // .distanceSquaredTo(nearest);
+    //
+    // }
 
-        double maxY = (parent == null) ? 1d : Math.max(parent.key.y(),
-                node.key.y());
-        double maxX = (parent == null) ? 1d : Math.max(parent.key.x(),
-                node.key.x());
-        if (node.line == VERTICAL)
-            return new Point2D(node.key.x(), Math.min(target.y(), maxY))
-                    .distanceTo(target);
-        else
-            return new Point2D(Math.min(target.x(), maxX), node.key.y())
-                    .distanceTo(target);
+    private RectHV getLeftRect(Node parent, Point2D point) {
+        if (parent == null)
+            return new RectHV(0, 0, point.x(), 1);
+        else {
+            RectHV parentRect = parent.rightRect;
+            if (pointLeansLeft(parent, point))
+                parentRect = parent.leftRect;
+
+            if (parent.line == VERTICAL)
+                return new RectHV(parentRect.xmin(), parentRect.ymin(),
+                        parentRect.xmax(), point.y());
+            else
+                return new RectHV(parentRect.xmin(), parentRect.ymin(),
+                        point.x(), parentRect.ymax());
+        }
+    }
+
+    private RectHV getRightRect(Node parent, Point2D point) {
+        if (parent == null)
+            return new RectHV(point.x(), 0, 1, 1);
+        else {
+            RectHV parentRect = parent.rightRect;
+            if (pointLeansLeft(parent, point))
+                parentRect = parent.leftRect;
+
+            if (parent.line == VERTICAL)
+                return new RectHV(parentRect.xmin(), point.y(),
+                        parentRect.xmax(), parentRect.ymax());
+            else
+                return new RectHV(point.x(), parentRect.ymin(),
+                        parentRect.xmax(), parentRect.ymax());
+        }
+    }
+
+    private boolean canBeReached(RectHV rect, Point2D target, Point2D nearest) {
+        return rect.distanceSquaredTo(target) <= target
+                .distanceSquaredTo(nearest);
     }
 
     private int comparePoints(Point2D pointToCompare, Node node) {
@@ -156,11 +218,11 @@ public class KdTree {
             return Double.valueOf(target.y()).compareTo(node.key.y()) < 0;
     }
 
-    private void inorder(Node x, Queue<Point2D> q) {
+    private void inorder(Node x, Queue<Node> q) {
         if (x == null)
             return;
         inorder(x.left, q);
-        q.enqueue(x.key);
+        q.enqueue(x);
         inorder(x.right, q);
     }
 
@@ -170,7 +232,7 @@ public class KdTree {
             if (node.key.equals(key))
                 return key;
             int cmp = comparePoints(key, node);
-            if (cmp <= 0)
+            if (cmp < 0)
                 node = node.left;
             else
                 node = node.right;
@@ -189,11 +251,16 @@ public class KdTree {
         private Node left, right; // links to left and right subtrees
         private boolean line; // color of parent link
         private int size; // subtree count
+        private RectHV leftRect;
+        private RectHV rightRect;
 
-        public Node(Point2D key, boolean line, int size) {
+        public Node(Point2D key, boolean line, int size, RectHV leftRect,
+                RectHV rightRect) {
             this.key = key;
             this.line = line;
             this.size = size;
+            this.leftRect = leftRect;
+            this.rightRect = rightRect;
         }
     }
 }
