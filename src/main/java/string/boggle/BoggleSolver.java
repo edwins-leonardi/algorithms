@@ -23,8 +23,9 @@ public class BoggleSolver {
     // Returns the set of all valid words in the given Boggle board, as an
     // Iterable.
     public Iterable<String> getAllValidWords(BoggleBoard board) {
-        Digraph digraph = new Digraph(26);
-        Position[] allpositions = new Position[board.rows() * board.cols()];
+        int n = board.rows() * board.cols();
+        Digraph digraph = new Digraph(n);
+        Position[] allpositions = new Position[n];
         initBoardDigraph(digraph, board, allpositions);
 
         Set<String> matches = new HashSet<>();
@@ -102,7 +103,7 @@ public class BoggleSolver {
     private void addPositionAtRight(Position myself, int colLimit, Digraph digraph, BoggleBoard board) {
         if (myself.col + 1 >= colLimit)
             return;
-        digraph.addEdge(, getIndexFromPosition(myself.row, myself.col + 1, board));
+        digraph.addEdge(getIndexFromPosition(myself, board), getIndexFromPosition(myself.row, myself.col + 1, board));
     }
 
     private void addPositionAtLeft(Position myself, Digraph digraph, BoggleBoard board) {
@@ -126,12 +127,8 @@ public class BoggleSolver {
     private void addPositionAtSW(Position myself, int rowLimit, int colLimit, Digraph digraph, BoggleBoard board) {
         if (myself.row + 1 >= rowLimit || myself.col + 1 >= colLimit)
             return;
-        try {
-            digraph.addEdge(getIndexFromPosition(myself, board),
-                    getIndexFromPosition(myself.row + 1, myself.col + 1, board));
-        } catch (Exception e) {
-            System.out.println(e);
-        }
+        digraph.addEdge(getIndexFromPosition(myself, board),
+                getIndexFromPosition(myself.row + 1, myself.col + 1, board));
     }
 
     private int getIndexForChar(char c) {

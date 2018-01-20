@@ -49,7 +49,7 @@ public class BoggleSolverTest {
             // System.out.println(s);
             score += solver.scoreOf(s);
         }
-        Assert.assertThat(score, CoreMatchers.equalTo(84));
+        Assert.assertThat(score, CoreMatchers.equalTo(26539));
     }
 
 }
