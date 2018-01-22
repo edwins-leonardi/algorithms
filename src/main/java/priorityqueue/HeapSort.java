@@ -7,8 +7,8 @@ public class HeapSort {
         for (int k = N / 2; k >= 1; k--)
             sink(pq, k, N);
         while (N > 1) {
-            exchange(pq, 1, N);
-            sink(pq, 1, --N);
+            exchange(pq, 1, N--);
+            sink(pq, 1, N);
         }
     }
 

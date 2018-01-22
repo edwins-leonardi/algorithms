@@ -214,4 +214,16 @@ public class BinarySearchTree<Key extends Comparable<Key>, Value> {
             this.count = count;
         }
     }
+
+    public static void main(String[] args) {
+        BinarySearchTree<String, Integer> bst = new BinarySearchTree<>();
+        bst.put("d", 5);
+        bst.put("c", 2);
+        bst.put("b", 3);
+        bst.put("a", 4);
+
+        bst.deleteMax();
+        for (String s : bst.keys())
+            System.out.println(s);
+    }
 }

@@ -56,7 +56,7 @@ public class MaxPQ<Key extends Comparable<Key>> {
     }
 
     public static void main(String[] args) {
-        UnorderedMaxPQ<Character> chars = new UnorderedMaxPQ<>(6);
+        MaxPQ<Character> chars = new MaxPQ<>(6);
         chars.insert('X');
         chars.insert('D');
         chars.insert('V');

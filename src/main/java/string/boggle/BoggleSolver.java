@@ -77,7 +77,10 @@ public class BoggleSolver {
                 }
             }
             marked[idx] = false;
-            sb.delete(key.length() - 1, key.length());
+            if ("QU".equals(prefix))
+                sb.delete(key.length() - 2, key.length());
+            else
+                sb.delete(key.length() - 1, key.length());
         }
     }
 

@@ -52,4 +52,19 @@ public class BoggleSolverTest {
         Assert.assertThat(score, CoreMatchers.equalTo(26539));
     }
 
+    @Test
+    public void testYAWLDictionaryOnBoardQwerty() {
+        In in = new In("/boggle/dictionary-yawl.txt");
+        String[] dictionary = in.readAllStrings();
+        BoggleSolver solver = new BoggleSolver(dictionary);
+        int score = 0;
+        BoggleBoard board = new BoggleBoard("/boggle/board-quinquevalencies.txt");
+        for (String s : solver.getAllValidWords(board)) {
+            System.out.println(s);
+            score++;
+            // score += solver.scoreOf(s);
+        }
+        Assert.assertThat(score, CoreMatchers.equalTo(130));
+    }
+
 }
