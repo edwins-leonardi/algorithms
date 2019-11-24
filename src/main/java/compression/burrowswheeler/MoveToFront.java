@@ -66,8 +66,6 @@ public class MoveToFront {
 
 
     public static void encode() {
-        String s = BinaryStdIn.readString();
-        char[] input = s.toCharArray();
         Node tail = null, head = null;
         for (int c = 0; c < R; c++) {
             tail = add(head, tail, (char) c);
@@ -75,8 +73,8 @@ public class MoveToFront {
                 head = tail;
         }
 
-        for (int i = 0; i < input.length; i++) {
-            char c = input[i];
+        while (!BinaryStdIn.isEmpty()) {
+            char c = BinaryStdIn.readChar();
             Node node = getCode(head, c);
             int code = node.code;
             BinaryStdOut.write(code, 8);

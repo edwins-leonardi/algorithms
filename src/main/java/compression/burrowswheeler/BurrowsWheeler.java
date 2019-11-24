@@ -3,12 +3,9 @@ package compression.burrowswheeler;
 
 import edu.princeton.cs.algs4.BinaryStdIn;
 import edu.princeton.cs.algs4.BinaryStdOut;
-import edu.princeton.cs.algs4.MinPQ;
-import edu.princeton.cs.algs4.StdOut;
-
-import java.util.Arrays;
 
 public class BurrowsWheeler {
+    private static final int R = 256;
 
     public static void transform() {
         String s = BinaryStdIn.readString();
@@ -33,35 +30,35 @@ public class BurrowsWheeler {
         int firstCode = BinaryStdIn.readInt();
         char[] last = BinaryStdIn.readString().toCharArray();
         int n = last.length;
-        MinPQ<Character> pq = new MinPQ<>();
-        char[] first = last.clone();
-        Integer[] next = new Integer[n];
-        for (int i = 0; i < n; i++)
-            pq.insert(last[i]);
-        int repetitions_count = 0;
-        for (int i = 0; i < n; i++) {
-            repetitions_count++;
-            char current = pq.delMin();
-            first[i] = current;
-            if (i > 0 && first[i] != first[i - 1])
-                repetitions_count = 1;
-            int skip = 1;
-            for (int j = 0; j < n; j++) {
-                if (first[i] == last[j]) {
-                    if (skip != repetitions_count) {
-                        skip++;
-                        continue;
-                    }
-                    next[i] = j;
-                    break;
-                }
-            }
+        int[] next = new int[n];
+        char[] first = buildSortedArray(last, next);
 
-        }
         for (int i = firstCode, count = 0; count < n; i = next[i], count++) {
             BinaryStdOut.write(first[i]);
         }
         BinaryStdOut.close();
+
+    }
+
+    private static char[] buildSortedArray(char[] array, int[] next) {
+        int[] count = new int[R + 1];
+        int n = array.length;
+        char[] aux = new char[n];
+
+        for (int i = 0; i < n; i++)
+            count[array[i] + 1]++;
+
+        for (int r = 0; r < R; r++)
+            count[r + 1] += count[r];
+
+        for (int i = 0; i < n; i++) {
+            int idx = count[array[i]]++;
+            aux[idx] = array[i];
+            next[idx] = i;
+        }
+
+        return aux;
+
     }
 
 
