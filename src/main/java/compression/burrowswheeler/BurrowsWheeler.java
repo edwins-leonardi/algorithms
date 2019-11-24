@@ -3,6 +3,7 @@ package compression.burrowswheeler;
 
 import edu.princeton.cs.algs4.BinaryStdIn;
 import edu.princeton.cs.algs4.BinaryStdOut;
+import edu.princeton.cs.algs4.MinPQ;
 import edu.princeton.cs.algs4.StdOut;
 
 import java.util.Arrays;
@@ -32,12 +33,16 @@ public class BurrowsWheeler {
         int firstCode = BinaryStdIn.readInt();
         char[] last = BinaryStdIn.readString().toCharArray();
         int n = last.length;
+        MinPQ<Character> pq = new MinPQ<>();
         char[] first = last.clone();
         Integer[] next = new Integer[n];
-        Arrays.sort(first);
+        for (int i = 0; i < n; i++)
+            pq.insert(last[i]);
         int repetitions_count = 0;
         for (int i = 0; i < n; i++) {
             repetitions_count++;
+            char current = pq.delMin();
+            first[i] = current;
             if (i > 0 && first[i] != first[i - 1])
                 repetitions_count = 1;
             int skip = 1;
@@ -58,6 +63,7 @@ public class BurrowsWheeler {
         }
         BinaryStdOut.close();
     }
+
 
     // if args[0] is "-", apply Burrows-Wheeler transform
     // if args[0] is "+", apply Burrows-Wheeler inverse transform
