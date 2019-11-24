@@ -45,6 +45,14 @@ public class MaxPQ<Key extends Comparable<Key>> {
         }
     }
 
+    private void print(){
+        for(Key i : items) {
+            if (i != null)
+                System.out.printf("%s\t", i);
+        }
+        System.out.println();
+    }
+
     private boolean less(int a, int b) {
         return items[a].compareTo(items[b]) < 0;
     }
@@ -56,16 +64,21 @@ public class MaxPQ<Key extends Comparable<Key>> {
     }
 
     public static void main(String[] args) {
-        MaxPQ<Character> chars = new MaxPQ<>(6);
+        MaxPQ<Character> chars = new MaxPQ<>(7);
         chars.insert('X');
         chars.insert('D');
         chars.insert('V');
         chars.insert('F');
         chars.insert('M');
         chars.insert('W');
+        chars.insert('Z');
+        chars.print();
         System.out.println(chars.delMax());
+        chars.print();
         System.out.println(chars.delMax());
+        chars.print();
         System.out.println(chars.delMax());
+        chars.print();
     }
 
 }

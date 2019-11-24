@@ -44,8 +44,9 @@ public class MSD {
             a[i] = aux[i - lo];
 
         // recursively sort for each character (excludes sentinel -1)
-        for (int r = 0; r < R; r++)
+        for (int r = 0; r < R; r++) {
             sort(a, aux, lo + count[r], lo + count[r + 1] - 1, d + 1);
+        }
 
     }
 
@@ -91,6 +92,7 @@ public class MSD {
                 "she", "shells", "shore", "surely", "the", "the", "ball" };
         StdRandom.shuffle(codes);
         MSD.sort(codes);
+        MSD.print(codes, 0, codes.length-1);
     }
 
     public static void print(String[] codes, int lo, int hi) {

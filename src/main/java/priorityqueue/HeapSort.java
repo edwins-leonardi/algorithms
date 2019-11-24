@@ -36,7 +36,7 @@ public class HeapSort {
 
     public static void main(String[] args) {
         HeapSort hs = new HeapSort();
-        String names[] = new String[] { "Ana", "Maria", "Fatima", "Roberto", "Velasques", "Zuleide", "Anibal" };
+        String names[] = new String[] { "Ana", "Maria", "Fatima", "Roberto", "Velasques", "Zuleide", "Anibal", "Aline" };
         hs.sort(names);
         for (String name : names)
             System.out.println(name);

@@ -47,7 +47,7 @@ public class BreadthFirstDirectedPaths {
 
     // BFS from single source
     private void bfs(Digraph G, int s) {
-        Queue<Integer> q = new Queue<Integer>();
+        Queue<Integer> q = new Queue<>();
         marked[s] = true;
         distTo[s] = 0;
         q.enqueue(s);

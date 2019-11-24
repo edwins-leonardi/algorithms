@@ -4,7 +4,19 @@
 	<groupId>com.edwins</groupId>
 	<artifactId>algorithms</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<name>algorithms</name>
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <configuration>
+                    <source>7</source>
+                    <target>7</target>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
+    <name>algorithms</name>
 	<description>Some algorithms exercises and challenges</description>
 
 	<repositories>

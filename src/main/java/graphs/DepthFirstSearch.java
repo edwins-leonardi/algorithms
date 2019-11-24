@@ -6,6 +6,7 @@ import edu.princeton.cs.algs4.StdOut;
 public class DepthFirstSearch {
     private boolean[] marked;    // marked[v] = is there an s-v path?
     private int count;           // number of vertices connected to s
+    private Integer[] pathTo;
 
     /**
      * Computes the vertices in graph {@code G} that are
@@ -16,6 +17,7 @@ public class DepthFirstSearch {
      */
     public DepthFirstSearch(Graph G, int s) {
         marked = new boolean[G.V()];
+        pathTo = new Integer[G.V()];
         validateVertex(s);
         dfs(G, s);
     }
@@ -26,6 +28,7 @@ public class DepthFirstSearch {
         marked[v] = true;
         for (int w : G.adj(v)) {
             if (!marked[w]) {
+                pathTo[w] = v;
                 dfs(G, w);
             }
         }
@@ -42,6 +45,12 @@ public class DepthFirstSearch {
         return marked[v];
     }
 
+    public void print(int s) {
+        for (int i =0; i<marked.length; i++) {
+            if(i != s)
+                System.out.printf("%d Is Connected=%s. PathTo=%s\n", i, marked[i], pathTo[i]);
+        }
+    }
     /**
      * Returns the number of vertices connected to the source vertex {@code s}.
      * @return the number of vertices connected to the source vertex {@code s}
@@ -63,6 +72,7 @@ public class DepthFirstSearch {
      * @param args the command-line arguments
      */
     public static void main(String[] args) {
+        System.out.println(args[0]);
         In in = new In(args[0]);
         Graph G = new Graph(in);
         int s = Integer.parseInt(args[1]);
@@ -72,6 +82,8 @@ public class DepthFirstSearch {
                 StdOut.print(v + " ");
         }
 
+        System.out.println();
+        search.print(s);
         StdOut.println();
         if (search.count() != G.V()) StdOut.println("NOT connected");
         else                         StdOut.println("connected");
