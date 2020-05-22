@@ -28,6 +28,7 @@ public class UniqueCharacters {
 		return true;
 	}
 
+
 	public static boolean hasOnlyUniqueCharacters(String str) {
 
 		if (str == null || str.isEmpty())
