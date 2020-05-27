@@ -7,22 +7,17 @@ public class StringCompression {
 
 	public static String compressString(String str) {
 
-		StringBuffer compressedString = new StringBuffer(str.length());
+		StringBuilder compressedString = new StringBuilder(str.length());
 
-		char lastChar = str.charAt(0);
-		int count = 1;
-		for (int i = 1; i < str.length(); i++) {
-			char currentChar = str.charAt(i);
-			if (currentChar != lastChar) {
-				compressedString.append(lastChar);
+		int count = 0;
+		for (int i = 0; i < str.length(); i++) {
+			count++;
+			if (i + 1 >= str.length() || str.charAt(i) != str.charAt(i+1)) {
+				compressedString.append(str.charAt(i));
 				compressedString.append(count);
-				lastChar = currentChar;
-				count = 1;
-			} else {
-				count++;
+				count = 0;
 			}
 		}
-		compressedString.append(lastChar + "" + count);
 
 		return str.length() > compressedString.length() ? compressedString.toString() : str;
 	}
