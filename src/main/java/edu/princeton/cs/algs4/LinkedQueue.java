@@ -29,9 +29,9 @@ public class LinkedQueue<Item extends Comparable<Item>> implements Iterable<Item
 	private Node last; // end of queue
 
 	// helper linked list class
-	private class Node {
-		private Item item;
-		private Node next;
+	protected class Node {
+		protected Item item;
+		protected Node next;
 	}
 
 	/**
@@ -61,6 +61,15 @@ public class LinkedQueue<Item extends Comparable<Item>> implements Iterable<Item
 	public int size() {
 		return n;
 	}
+
+	public Node getFirst(){
+		return first;
+	}
+
+	public Node getNext(Node current){
+		return current.next;
+	}
+
 
 	/**
 	 * Returns the item least recently added to this queue.
@@ -130,6 +139,45 @@ public class LinkedQueue<Item extends Comparable<Item>> implements Iterable<Item
 		return current.item;
 	}
 
+	public void deleteMiddleNode(Item item){
+		Node prev = null;
+		Node current = first;
+		while(current != null) {
+			if (current.item == item) {
+				if(prev == null)
+					first = first.next;
+				else
+					prev.next = current.next;
+				return;
+			}
+			prev = current;
+			current = current.next;
+		}
+	}
+
+	public Item myGetKthToLastElement(int kth) {
+		if (isEmpty())
+			throw new NoSuchElementException("Queue underflow");
+		if (kth < 0)
+			throw new IllegalArgumentException("ktn must not be smaller than zero");
+		if (kth > n - 1)
+			throw new IllegalArgumentException(
+					"kth must not be greater than the number of elements in the queue");
+		int count = 0;
+		Node kthElement = first;
+		Node current = first;
+		while(current.next != null) {
+			count++;
+			if (count > kth) {
+				kthElement = kthElement.next;
+				count--;
+			}
+			current = current.next;
+		}
+		return kthElement.item;
+	}
+
+
 	/**
 	 * Adds the item to this queue.
 	 * 
@@ -185,13 +233,60 @@ public class LinkedQueue<Item extends Comparable<Item>> implements Iterable<Item
 		}
 	}
 
+	public void myPartitionByValue(Item value) {
+		Node current = first;
+		Node runner = first.next;
+		while(runner != null) {
+			if (current.item.compareTo(value) == -1) {
+				current = current.next;
+			} else if (current.item.compareTo(runner.item) == 1) {
+				Item temp = current.item;
+				current.item = runner.item;
+				runner.item = temp;
+				current = current.next;
+			}
+			runner = runner.next;
+		}
+	}
+
+	public void myPartitionByValue2(Item value) {
+		Node node = first;
+		Node head = null;
+		Node tail = null;
+		while(node != null) {
+			Node next = node.next;
+			if (node.item.compareTo(value) == -1 ) {
+				if (head == null) {
+					head = node;
+					head.next = null;
+				} else {
+					Node temp = head;
+					head = node;
+					head.next = temp;
+				}
+			} else {
+				if (tail == null) {
+					tail = node;
+					tail.next = null;
+				} else {
+					Node temp = tail;
+					tail = node;
+					tail.next = temp;
+				}
+			}
+			node = next;
+		}
+		first.next = last;
+		first = head;
+	}
+
 	/**
-	 * Removes and returns the item on this queue that was least recently added.
-	 * 
-	 * @return the item on this queue that was least recently added
-	 * @throws java.util.NoSuchElementException
-	 *             if this queue is empty
-	 */
+         * Removes and returns the item on this queue that was least recently added.
+         *
+         * @return the item on this queue that was least recently added
+         * @throws java.util.NoSuchElementException
+         *             if this queue is empty
+         */
 	public Item dequeue() {
 		if (isEmpty())
 			throw new NoSuchElementException("Queue underflow");

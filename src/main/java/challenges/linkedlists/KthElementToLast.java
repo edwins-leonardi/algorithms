@@ -15,7 +15,8 @@ public class KthElementToLast {
 		chars.enqueue('g');
 		chars.enqueue('h');
 
-		System.out.println(chars.getKthToLastElement(7));
+		System.out.println(chars.getKthToLastElement(5));
+		System.out.println(chars.myGetKthToLastElement(5));
 	}
 
 }
